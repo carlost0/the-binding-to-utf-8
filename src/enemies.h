@@ -6,11 +6,19 @@
 
 #define ATTACK_FRAMES_MAX 10
 //hello!
+typedef enum {
+    CIRC,
+    SQUARE,
+    CROSS
+} attack_form;
+
 typedef struct {
+    attack_form type;
     int strength;
     int distance;
     int probabillity;
     int time;
+    char sprite;
     bool is_active;
 } attack_t;
 
