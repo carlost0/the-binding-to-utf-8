@@ -162,14 +162,16 @@ void init_enemy(scene_t scene, enemy_t * enemy, int seed) {
     enemy->hitbox.pos.y            = enemy->atr.pos.y;
     enemy->hitbox.sprite           = ' ';
     
-    enemy->movement.speed.x        = (rand() % 2) + 1;
-    enemy->movement.speed.y        = (rand() % 2) + 1;;
-    enemy->movement.probabillity   = 50;
+    enemy->movement.speed.x        = 1;
+    enemy->movement.speed.y        = 1;
+    enemy->movement.probabillity   = 60;
+
     enemy->hp                      = ceil(3 * enemy->atr.size.w);
     enemy->gold                    = ceil(enemy->hp / 2);
+
     enemy->attack.strength         = ceil(enemy->hp / 2);
     enemy->attack.distance         = ceil(enemy->attack.strength);
-    enemy->attack.probabillity     = 30;//enemy->atr.size.w * (100 / 3);
+    enemy->attack.probabillity     = 40;//enemy->atr.size.w * (100 / 3);
     enemy->attack.type             = enemy->atr.size.w % 2 == 0 ? rand() % 2 : (rand() % 2) + 1;
     enemy->attack.sprite           = '.';
 }

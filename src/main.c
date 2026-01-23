@@ -7,6 +7,7 @@
 #include "enemies.h"
 #include <pthread.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #define FPS 30
@@ -21,11 +22,13 @@ int main(void) {
 	};
 
     player_t player;
-    enemy_t enemies[ENEMY_COUNT] = {0};  
+    //enemy_t enemies[ENEMY_COUNT] = {0};  
+    enemy_t * enemies = (enemy_t *) malloc(ENEMY_COUNT * sizeof(enemy_t));
+    memset(enemies, 0, sizeof(enemy_t) * ENEMY_COUNT);
 
     init_player(&player);
 
-    for (int i = 0; i < sizeof(enemies) / sizeof(enemy_t); i++){
+    for (int i = 0; i < ENEMY_COUNT; i++){
         init_enemy(scene, &enemies[i], time(0) + i);
     }
 
@@ -35,7 +38,7 @@ int main(void) {
 	while (input != 'q') {
 		GET_INPUT
 
-        for (int i = 0; i < sizeof(enemies) / sizeof(enemy_t); i++){
+        for (int i = 0; i < ENEMY_COUNT; i++){
             if (enemies[i].is_alive) handle_enemy(&scene, &enemies[i], &player, time(0) + i);
         }
 
@@ -50,4 +53,5 @@ int main(void) {
 
 	END_INPUT
 	free(scene.screen);
+    free(enemies);
 }
