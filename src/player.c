@@ -45,30 +45,38 @@ void init_player(player_t * player) {
 
     player->velocity.x = 0;
     player->velocity.y = 0;
-    player->speed.x = 2;
-    player->speed.y = 1;
+    player->speed.x = 3;
+    player->speed.y = 2;
     
     player->hp = 100;
     player->gold = 0;
+
+    player->invincible = false;
 }
 
 void move_player(scene_t scene, char input, player_t * player) {
     switch (input) {
         case 'w':
             player->velocity.y = -player->speed.y;
+            player->velocity.x = 0;
             break;
         case 's':
             player->velocity.y = player->speed.y;
+            player->velocity.x = 0;
             break;
         case 'a':
             player->velocity.x = -player->speed.x;
+            player->velocity.y = 0;
             break;
         case 'd':
             player->velocity.x = player->speed.x;
+            player->velocity.y = 0;
             break;
         default:
+            /*
             player->velocity.x = 0;
             player->velocity.y = 0;
+            */
             break;
     }
     
@@ -80,4 +88,18 @@ void move_player(scene_t scene, char input, player_t * player) {
         player->atr.pos.y += player->velocity.y;
 
     player->hitbox.pos = player->atr.pos;
+}
+
+void handle_i_frames(player_t * player) {
+    if (player->invincible) player->attack_timer++;
+    if (player->attack_timer > PLAYER_I_FRAMES) {
+        player->invincible = false;
+        player->attack_timer = 0;
+    } 
+}
+void handle_player(scene_t * scene, player_t * player, char input) {
+    handle_i_frames(player);
+    move_player(*scene, input, player);
+    draw_player(scene, *player);
+    draw_player_stats(scene, *player);
 }

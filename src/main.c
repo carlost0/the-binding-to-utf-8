@@ -7,10 +7,12 @@
 #include "enemies.h"
 #include <pthread.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define FPS 30
 #define SCREEN_HEIGHT 36
 #define SCREEN_WIDTH  74
+#define ENEMY_COUNT   3
 
 int main(void) {
 	scene_t scene = {
@@ -19,21 +21,27 @@ int main(void) {
 	};
 
     player_t player;
-    enemy_t enemy;
+    enemy_t enemies[ENEMY_COUNT] = {0};  
 
     init_player(&player);
-    init_enemy(scene, &enemy);
+
+    for (int i = 0; i < sizeof(enemies) / sizeof(enemy_t); i++){
+        init_enemy(scene, &enemies[i], time(0) + i);
+    }
+
 	init_scene(&scene);
 	INIT_INPUT	
 
 	while (input != 'q') {
 		GET_INPUT
-        draw_player_stats(&scene, player);
 
-        handle_enemy(&scene, &enemy, &player);
-        draw_player(&scene, player);
+        for (int i = 0; i < sizeof(enemies) / sizeof(enemy_t); i++){
+            if (enemies[i].is_alive) handle_enemy(&scene, &enemies[i], &player, time(0) + i);
+        }
+
         draw_screen_borders(&scene);
-        move_player(scene, input, &player);
+
+        handle_player(&scene, &player, input);
 
         print_scene(&scene);
         clear_scene(&scene);
