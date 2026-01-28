@@ -1,6 +1,4 @@
 #include "player.h"
-#include <strings.h>
-#include <stdio.h>
 
 void draw_player_stats(scene_t * scene, player_t player) {
     text_t hp = {
@@ -30,9 +28,9 @@ void draw_player(scene_t * scene, player_t player) {
     draw_rectangle(scene, player.atr);
 }
 
-void init_player(player_t * player) {
-    player->atr.pos.x = 64;
-    player->atr.pos.y = 18;
+void init_player(scene_t scene, player_t * player) {
+    player->atr.pos.x = round(scene.size.w / 2);
+    player->atr.pos.y = round(scene.size.h / 2);
     player->atr.sprite = '@';
     player->atr.size.w = PLAYER_WIDTH;
     player->atr.size.h = PLAYER_HEIGHT;
@@ -73,10 +71,8 @@ void move_player(scene_t scene, char input, player_t * player) {
             player->velocity.y = 0;
             break;
         default:
-            /*
             player->velocity.x = 0;
             player->velocity.y = 0;
-            */
             break;
     }
     

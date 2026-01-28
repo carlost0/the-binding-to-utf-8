@@ -1,6 +1,4 @@
 #include "enemies.h"
-#include <stdlib.h>
-#include <math.h>
 
 int square(int n) { return n * n; }
 
@@ -146,9 +144,9 @@ void attack_cross(scene_t * scene, enemy_t enemy, player_t * player) {
     }
 }
 
-void init_enemy(scene_t scene, enemy_t * enemy, int seed) {
+void init_enemy(scene_t scene, enemy_t * enemy, int64_t seed) {
     srand(seed);
-    enemy->is_alive                = true;;
+    enemy->is_alive                = true;
 
     enemy->atr.size.w              = enemy_sizes[rand() % 3];
     enemy->atr.size.h              = enemy->atr.size.w;
@@ -164,7 +162,7 @@ void init_enemy(scene_t scene, enemy_t * enemy, int seed) {
     
     enemy->movement.speed.x        = 1;
     enemy->movement.speed.y        = 1;
-    enemy->movement.probabillity   = 60;
+    enemy->movement.probabillity   = 100;
 
     enemy->hp                      = ceil(3 * enemy->atr.size.w);
     enemy->gold                    = ceil(enemy->hp / 2);
@@ -176,7 +174,7 @@ void init_enemy(scene_t scene, enemy_t * enemy, int seed) {
     enemy->attack.sprite           = '.';
 }
 
-void handle_enemy(scene_t * scene, enemy_t * enemy, player_t * player, int seed) {
+void handle_enemy(scene_t * scene, enemy_t * enemy, player_t * player, int64_t seed) {
     srand(seed);
     
     // handle enemy attacks
