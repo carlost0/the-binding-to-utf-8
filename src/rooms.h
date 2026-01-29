@@ -31,10 +31,11 @@ typedef struct {
     int32_t     id;
 } room_t;
 
-room_t init_room(box_t size, int id);
-door_t init_door(box_t size, anchor_t anchor, room_t room, int64_t out_id);
-void   handle_room(room_t * room, player_t * player, int64_t seed, int32_t * current_room_id);
-void   handle_door(room_t * room, player_t * player, int32_t * current_room_id);
-room_t get_room_by_id(int32_t id, room_t * rooms, int32_t room_amount);
+room_t  init_room(box_t size, int32_t id, int8_t enemy_amount);
+door_t  init_door(box_t size, anchor_t anchor, room_t room, int64_t out_id);
+int32_t handle_room(room_t * room, player_t * player, int64_t seed);
+int32_t handle_door(room_t * room, player_t * player);
+room_t  get_room_by_id(int32_t id, room_t * rooms, int32_t room_amount);
+void    draw_room_id(room_t * room, int32_t id);
 
 #endif //ROOMS_H_

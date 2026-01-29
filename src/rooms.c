@@ -44,15 +44,15 @@ door_t init_door(box_t size, anchor_t anchor, room_t room, int64_t out_id) {
     return door;
 }
 
-room_t init_room(box_t size, int id) {
+room_t init_room(box_t size, int32_t id, int8_t enemy_amount) {
     box_t door_size_h = {
-        .w = round(size.w / 3),
+        .w = round(size.w / 4),
         .h = 2
     };
 
     box_t door_size_v = {
         .w = 2,
-        .h = round(size.h / 3)
+        .h = round(size.h / 4)
     };
 
     room_t room = {
@@ -60,33 +60,85 @@ room_t init_room(box_t size, int id) {
             .size = size
         },
         .enemies = {0},
-        .enemy_amount = 1,
+        .enemy_amount = enemy_amount,
         .id = id
     };
 
     init_scene(&room.scene);
 
     for (int i = 0; i < room.enemy_amount; i++) {
-        init_enemy(room.scene, &room.enemies[i], time(0) + i);
+        init_enemy(room.scene, &room.enemies[i], clock() + i);
     }
 
     return room;
 }
 
-void handle_door(room_t * room, player_t * player, int32_t * current_room_id) {
+int32_t handle_door(room_t * room, player_t * player) {
     for (int i = 0; i < 4; i++) {
-        if (check_collision(player->hitbox, room->doors[i].box)) 
-            current_room_id = &room->doors[i].out_id;
         draw_rectangle(&room->scene, room->doors[i].box);
+
+        if (!check_collision(player->hitbox, room->doors[i].box)) return room->id;
+
+
+        if (room->doors[i].anchor == LEFT)      player->atr.pos.x = room->scene.size.w - 3;
+        if (room->doors[i].anchor == RIGHT)     player->atr.pos.x = 3;
+        if (room->doors[i].anchor == BOTTOM)    player->atr.pos.x = room->scene.size.h - 3;
+        if (room->doors[i].anchor == TOP)       player->atr.pos.y = 3;
+        /*
+        switch (room->doors[i].anchor) {
+            case TOP:
+                player->atr.pos.x = 
+                    room->doors[i].box.pos.x + round(room->doors[i].box.size.w / 2);
+
+                player->atr.pos.y = 
+                    room->scene.size.h - room->doors[i].box.pos.y - 3;
+            case LEFT:
+                player->atr.pos.x =
+                    room->scene.size.w - 3;
+
+                player->atr.pos.y = 
+                    room->doors[i].box.pos.y + round(room->doors[i].box.size.h / 2);
+            case BOTTOM:
+                player->atr.pos.x = 
+                    room->doors[i].box.pos.x + round(room->doors[i].box.size.w / 2);
+
+                player->atr.pos.y =
+                    room->scene.size.h - room->doors[i].box.pos.y + 3;
+            case RIGHT:
+                player->atr.pos.x =
+                    room->doors[i].box.pos.x + 3;
+
+                player->atr.pos.y = 
+                    room->doors[i].box.pos.y + round(room->doors[i].box.size.h / 2);
+        }
+        */
+
+        int32_t ret = room->doors[i].out_id;
+        return ret;
+
     }
 }
 
-void handle_room(room_t * room, player_t * player, int64_t seed, int32_t * current_room_id) {
+int32_t handle_room(room_t * room, player_t * player, int64_t seed) {
+    int32_t id;
+
     for (int i = 0; i < room->enemy_amount; i++) {
         handle_enemy(&room->scene, &room->enemies[i], player, seed + i);
     }
+
     for (int i = 0; i < 4; i++) {
-        handle_door(room, player, current_room_id);
+        id = handle_door(room, player);
     }
+
+    return id;
 }
 
+void draw_room_id(room_t * room, int32_t id) {
+    char buf[10];
+    sprintf(buf, "ROOM: %d", id);
+    text_t text = {
+        .str = buf,
+        .pos = {1, 3}
+    };
+    draw_text_horizontal(&room->scene, text);
+}

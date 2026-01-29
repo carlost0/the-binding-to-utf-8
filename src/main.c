@@ -16,22 +16,25 @@
 #define ENEMY_COUNT   3
 
 int main(void) {
-	box_t size = {SCREEN_WIDTH, SCREEN_HEIGHT};
+	box_t room_size = {SCREEN_WIDTH, SCREEN_HEIGHT};
+	box_t door_vert_size = {3, round(SCREEN_HEIGHT / 3)};
+	box_t door_hori_size = {round(SCREEN_WIDTH / 3), 3};
     //test();
     int32_t room_id = 0;
-    int32_t room_amount = 1;
+    int32_t old_room_id = 0;
+    int32_t room_amount = 2;
 
     room_t * rooms = (room_t *) malloc(sizeof(room_t) * room_amount);
 
     for (int i = 0; i < room_amount; i++) {
-        rooms[i] = init_room(size, i);
+        rooms[i] = init_room(room_size, i, i + 1);
     }
 
+    rooms[0].doors[0] = init_door(door_vert_size, RIGHT, rooms[0], 1);
+    rooms[1].doors[0] = init_door(door_vert_size, LEFT, rooms[1], 0);
     room_t room;
 
-
     player_t player;
-
 
     room = get_room_by_id(room_id, rooms, room_amount);
     init_player(room.scene, &player);
@@ -40,9 +43,16 @@ int main(void) {
 
 	while (input != 'q') {
 		GET_INPUT
+
+        draw_room_id(&room, room_id);
         draw_screen_borders(&room.scene);
 
-        handle_room(&room, &player, time(0), &room_id);
+        old_room_id = room_id;
+        room_id     = handle_room(&room, &player, time(0));
+
+        if (room_id != old_room_id)
+            room = get_room_by_id(room_id, rooms, room_amount);
+
         handle_player(&room.scene, &player, input);
 
         print_scene(&room.scene);

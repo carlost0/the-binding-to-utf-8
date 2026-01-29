@@ -10,35 +10,35 @@ typedef struct {
 } point_t;
 
 typedef struct {
-    char * screen;
+    unsigned char * screen;
     box_t size;
 } scene_t;
 
 typedef struct {
     box_t size;
     point_t pos;
-    char sprite; // the object will be drawn with that character
+    unsigned char sprite; // the object will be drawn with that character
 } rectangle_t;
 
 typedef struct {
     point_t pos;
     int radius;
-    char sprite; // the object will be drawn with that character
+    unsigned char sprite; // the object will be drawn with that character
 } circle_t;
 
 typedef struct {
     point_t p1;
     point_t p2;
-    char sprite; // the object will be drawn with that character
+    unsigned char sprite; // the object will be drawn with that character
 } line_t;
 
 typedef struct {
     point_t pos;
-    char * str;
+    unsigned char * str;
 } text_t;
 
 typedef struct {
-    char * sprite;
+    unsigned char * sprite;
     point_t pos;
     box_t size;
 } img_object_t;
@@ -53,7 +53,7 @@ void draw_rectangle(scene_t *scene, rectangle_t rect);
 void draw_text_horizontal(scene_t *scene, text_t text); 
 void draw_text_vertical(scene_t *scene, text_t text); 
 void draw_line(scene_t *scene, line_t line); 
-void draw_point(scene_t *scene, point_t pos, char sprite); // the point will be drawn with sprite
+void draw_point(scene_t *scene, point_t pos, unsigned char sprite); // the point will be drawn with sprite
 void draw_circle(scene_t *scene, circle_t circle); 
 
 void draw_img(scene_t *scene, img_object_t ascii);

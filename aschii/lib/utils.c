@@ -128,7 +128,7 @@ void draw_line(scene_t *scene, line_t line) {
     }
 }
 
-void draw_point(scene_t *scene, point_t pos, char sprite) {
+void draw_point(scene_t *scene, point_t pos, unsigned char sprite) {
     scene->screen[pos.y * scene->size.w + pos.x] = sprite;
 }
 

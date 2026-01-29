@@ -178,11 +178,11 @@ void init_enemy(scene_t scene, enemy_t * enemy, int64_t seed) {
     enemy->hp                      = ceil(3 * enemy->atr.size.w);
     enemy->gold                    = ceil(enemy->hp / 2);
 
-    enemy->attack.strength         = ceil(enemy->hp / 2);
+    enemy->attack.strength         = enemy->atr.size.w * 2;
     enemy->attack.distance         = ceil(enemy->attack.strength);
     enemy->attack.probabillity     = 40;//enemy->atr.size.w * (100 / 3);
     enemy->attack.type             = enemy->atr.size.w % 2 == 0 ? rand() % 2 : (rand() % 2) + 1;
-    enemy->attack.sprite           = '.';
+    enemy->attack.sprite           = '~';
 }
 
 void handle_enemy(scene_t * scene, enemy_t * enemy, player_t * player, int64_t seed) {

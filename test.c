@@ -3,7 +3,7 @@
 #include <unistd.h>
 
 int main() {
-    int a = 1 / 0;
-    printf("%d", 1);
+    unsigned char a = '¤';
+    printf("¤");
 }
 
