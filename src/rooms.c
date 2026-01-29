@@ -1,7 +1,4 @@
 #include "rooms.h"
-#include <stdlib.h>
-#include <strings.h>
-#include <time.h>
 
 room_t get_room_by_id(int32_t id, room_t * rooms, int32_t room_amount) {
     if (rooms == NULL) {
@@ -17,14 +14,53 @@ room_t get_room_by_id(int32_t id, room_t * rooms, int32_t room_amount) {
     exit(1);
 }
 
+door_t init_door(box_t size, anchor_t anchor, room_t room, int64_t out_id) {
+    point_t pos;
+    if (anchor == TOP) {
+        pos.x = round(room.scene.size.w / 2) - round(size.w / 2);
+        pos.y = room.scene.size.h;
+    } else if (anchor == LEFT) {
+        pos.x = 0;
+        pos.y = round(room.scene.size.h / 2) - round(size.h / 2);
+    } else if (anchor == BOTTOM) {
+        pos.x = round(room.scene.size.w / 2) - round(size.w / 2);
+        pos.y = size.h;
+    } else if (anchor == RIGHT) {
+        pos.x = room.scene.size.w - size.w;
+        pos.y = round(room.scene.size.h / 2) - round(size.h / 2);
+    }
+
+    door_t door = {
+        .box = {
+            .size   = size,
+            .pos    = pos,
+            .sprite = 'D'
+        },
+        .anchor     = anchor,
+        .in_id      = room.id,
+        .out_id     = out_id,
+    };
+
+    return door;
+}
+
 room_t init_room(box_t size, int id) {
+    box_t door_size_h = {
+        .w = round(size.w / 3),
+        .h = 2
+    };
+
+    box_t door_size_v = {
+        .w = 2,
+        .h = round(size.h / 3)
+    };
+
     room_t room = {
         .scene = {
             .size = size
         },
-        .doors = {0},
         .enemies = {0},
-        .enemy_amount = 2,
+        .enemy_amount = 1,
         .id = id
     };
 
@@ -35,36 +71,6 @@ room_t init_room(box_t size, int id) {
     }
 
     return room;
-}
-
-door_t init_door(box_t size, anchor_t anchor, room_t room_in, room_t room_out) {
-    point_t pos;
-    if (anchor == TOP) {
-        pos.x = round(room_in.scene.size.w / 2) - round(size.w / 2);
-        pos.y = room_in.scene.size.h;
-    } else if (anchor == LEFT) {
-        pos.x = 0;
-        pos.y = round(room_in.scene.size.h / 2) - round(size.h / 2);
-    } else if (anchor == BOTTOM) {
-        pos.x = round(room_in.scene.size.w / 2) - round(size.w / 2);
-        pos.y = size.h;
-    } else if (anchor == RIGHT) {
-        pos.x = room_in.scene.size.w - size.w;
-        pos.y = round(room_in.scene.size.h / 2) - round(size.h / 2);
-    }
-
-    door_t door = {
-        .box = {
-            .size   = size,
-            .pos    = pos,
-            .sprite = '['
-        },
-        .anchor     = anchor,
-        .in_id      = room_in.id,
-        .out_id     = room_out.id,
-    };
-
-    return door;
 }
 
 void handle_door(room_t * room, player_t * player, int32_t * current_room_id) {
@@ -78,8 +84,7 @@ void handle_door(room_t * room, player_t * player, int32_t * current_room_id) {
 void handle_room(room_t * room, player_t * player, int64_t seed, int32_t * current_room_id) {
     for (int i = 0; i < room->enemy_amount; i++) {
         handle_enemy(&room->scene, &room->enemies[i], player, seed + i);
-        draw_enemy(&room->scene, room->enemies[i]);
-    };
+    }
     for (int i = 0; i < 4; i++) {
         handle_door(room, player, current_room_id);
     }

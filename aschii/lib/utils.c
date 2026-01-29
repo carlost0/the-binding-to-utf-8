@@ -23,9 +23,10 @@ char ascii_chars[71] =  {'$', '@', 'B', '%', '8', '&',
                 '`', '\'', '.', ' '};
 
 point_t add_points(point_t v1, point_t v2) {
-    point_t res;
-    res.x = v1.x + v2.x;
-    res.y = v1.y + v2.y;
+    point_t res = {
+        .x = v1.x + v2.x,
+        .y = v1.y + v2.y
+    };
     return res;
 }
 

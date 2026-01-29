@@ -1,5 +1,4 @@
 // main.c
-
 // cc -std=c99 -lm -lpthread -D_POSIX_C_SOURCE=200809L src/main.c aschii/lib/utils.c aschii/lib/keyboard.c aschii/include/cbmp.c -o game
 #include "../aschii/include/cbmp.h"
 #include "../aschii/lib/utils.h"
@@ -11,7 +10,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define FPS 30
+#define FPS           30
 #define SCREEN_HEIGHT 36
 #define SCREEN_WIDTH  74
 #define ENEMY_COUNT   3
@@ -32,11 +31,11 @@ int main(void) {
 	box_t size = {SCREEN_WIDTH, SCREEN_HEIGHT};
     //test();
     int32_t room_id = 0;
-    int32_t room_amount = 2;
+    int32_t room_amount = 1;
 
-    room_t * rooms = (room_t *) malloc(sizeof(room_t) * 2);
+    room_t * rooms = (room_t *) malloc(sizeof(room_t) * room_amount);
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < room_amount; i++) {
         rooms[i] = init_room(size, i);
     }
 
@@ -46,14 +45,13 @@ int main(void) {
     player_t player;
 
 
+    room = get_room_by_id(room_id, rooms, room_amount);
     init_player(room.scene, &player);
 
 	INIT_INPUT	
 
 	while (input != 'q') {
 		GET_INPUT
-        room = get_room_by_id(room_id, rooms, 2);
-
         draw_screen_borders(&room.scene);
 
         handle_room(&room, &player, time(0), &room_id);

@@ -32,7 +32,7 @@ typedef struct {
 } room_t;
 
 room_t init_room(box_t size, int id);
-door_t init_door(box_t size, anchor_t anchor, room_t room_in, room_t room_out);
+door_t init_door(box_t size, anchor_t anchor, room_t room, int64_t out_id);
 void   handle_room(room_t * room, player_t * player, int64_t seed, int32_t * current_room_id);
 void   handle_door(room_t * room, player_t * player, int32_t * current_room_id);
 room_t get_room_by_id(int32_t id, room_t * rooms, int32_t room_amount);

@@ -1,5 +1,8 @@
 #include "enemies.h"
 
+text_t velo;
+text_t pos;
+
 int square(int n) { return n * n; }
 
 int random_range(int min, int max) { return rand() % (max - min + 1) + min; }
@@ -26,13 +29,21 @@ bool check_enemy_inbounds(scene_t scene, enemy_t enemy) {
 }
 
 void move_enemy(scene_t scene, enemy_t * enemy, player_t player) {
-    if (enemy->atr.pos.x < player.atr.pos.x) enemy->movement.velocity.x = enemy->movement.speed.x;
-    if (enemy->atr.pos.x > player.atr.pos.x) enemy->movement.velocity.x = -enemy->movement.speed.x;
+    enemy->movement.velocity.x = 0;
+    enemy->movement.velocity.y = 0;
 
-    if (enemy->atr.pos.y < player.atr.pos.y) enemy->movement.velocity.y = enemy->movement.speed.y;
-    if (enemy->atr.pos.y > player.atr.pos.y) enemy->movement.velocity.y = -enemy->movement.speed.y;
+    if (enemy->atr.pos.x < player.atr.pos.x){
+        enemy->movement.velocity.x = enemy->movement.speed.x;
+    } if (enemy->atr.pos.x > player.atr.pos.x) {
+        enemy->movement.velocity.x = -enemy->movement.speed.x;
+    } if (enemy->atr.pos.y < player.atr.pos.y) {
+        enemy->movement.velocity.y = enemy->movement.speed.y;
+    } if (enemy->atr.pos.y > player.atr.pos.y) {
+        enemy->movement.velocity.y = -enemy->movement.speed.y;
+    }
 
-    if (check_enemy_inbounds(scene, *enemy)) enemy->atr.pos = add_points(enemy->movement.velocity, enemy->atr.pos);
+    enemy->atr.pos = add_points(enemy->movement.velocity, enemy->atr.pos);
+
     enemy->hitbox.pos = enemy->atr.pos;
 }
 
@@ -162,7 +173,7 @@ void init_enemy(scene_t scene, enemy_t * enemy, int64_t seed) {
     
     enemy->movement.speed.x        = 1;
     enemy->movement.speed.y        = 1;
-    enemy->movement.probabillity   = 100;
+    enemy->movement.probabillity   = 40;
 
     enemy->hp                      = ceil(3 * enemy->atr.size.w);
     enemy->gold                    = ceil(enemy->hp / 2);
@@ -207,8 +218,6 @@ void handle_enemy(scene_t * scene, enemy_t * enemy, player_t * player, int64_t s
     }
 
     // handle movement
-    enemy->movement.velocity.x = 0;
-    enemy->movement.velocity.y = 0;
 
     if (rand() % 101 <= enemy->movement.probabillity) move_enemy(*scene, enemy, *player);
     draw_enemy(scene, *enemy);

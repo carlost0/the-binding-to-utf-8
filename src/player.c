@@ -11,13 +11,13 @@ void draw_player_stats(scene_t * scene, player_t player) {
         .str = ""
     };
 
-    char gold_tmp[50];
-    char hp_tmp[50];
+    char gold_buf[50];
+    char hp_buf[50];
 
-    sprintf(hp_tmp, "HP:   %d", player.hp);
-    sprintf(gold_tmp, "GOLD: %d", player.gold);
-    gold.str = gold_tmp;
-    hp.str = hp_tmp;
+    sprintf(hp_buf, "HP:   %d", player.hp);
+    sprintf(gold_buf, "GOLD: %d", player.gold);
+    gold.str = gold_buf;
+    hp.str = hp_buf;
     
     draw_text_horizontal(scene, hp);
     draw_text_horizontal(scene, gold);
@@ -29,14 +29,13 @@ void draw_player(scene_t * scene, player_t player) {
 }
 
 void init_player(scene_t scene, player_t * player) {
-    player->atr.pos.x = round(scene.size.w / 2);
-    player->atr.pos.y = round(scene.size.h / 2);
-    player->atr.sprite = '@';
-    player->atr.size.w = PLAYER_WIDTH;
-    player->atr.size.h = PLAYER_HEIGHT;
+    player->atr.pos.x     = round(scene.size.w / 2);
+    player->atr.pos.y     = round(scene.size.h / 2);
+    player->atr.sprite    = '@';
+    player->atr.size.w    = PLAYER_WIDTH;
+    player->atr.size.h    = PLAYER_HEIGHT;
 
-    player->hitbox.pos.x = 64;
-    player->hitbox.pos.y = 18;
+    player->hitbox.pos    = player->atr.pos;
     player->hitbox.sprite = ' ';
     player->hitbox.size.w = PLAYER_WIDTH;
     player->hitbox.size.h = PLAYER_HEIGHT;
@@ -71,8 +70,8 @@ void move_player(scene_t scene, char input, player_t * player) {
             player->velocity.y = 0;
             break;
         default:
-            player->velocity.x = 0;
-            player->velocity.y = 0;
+           //player->velocity.x = 0;
+           //player->velocity.y = 0;
             break;
     }
     
