@@ -3,7 +3,13 @@
 #include <unistd.h>
 
 int main() {
-    unsigned char a = '¤';
-    printf("¤");
+    int a = 0;
+    int b = 0;
+
+    a++;
+    ++b;
+
+    printf("a: %d\nb: %d", a, b);
+    return 0;
 }
 

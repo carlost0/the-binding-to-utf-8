@@ -10,8 +10,10 @@ room_t get_room_by_id(int32_t id, room_t * rooms, int32_t room_amount) {
         if (rooms->id == id) return *rooms;
         rooms++;
     }
-    perror("room not found");
-    exit(1);
+
+    room_t not_found = { .id = -1 };
+
+    return not_found;
 }
 
 door_t init_door(box_t size, anchor_t anchor, room_t room, int64_t out_id) {
@@ -79,43 +81,13 @@ int32_t handle_door(room_t * room, player_t * player) {
 
         if (!check_collision(player->hitbox, room->doors[i].box)) return room->id;
 
-
         if (room->doors[i].anchor == LEFT)      player->atr.pos.x = room->scene.size.w - 3;
         if (room->doors[i].anchor == RIGHT)     player->atr.pos.x = 3;
         if (room->doors[i].anchor == BOTTOM)    player->atr.pos.x = room->scene.size.h - 3;
         if (room->doors[i].anchor == TOP)       player->atr.pos.y = 3;
-        /*
-        switch (room->doors[i].anchor) {
-            case TOP:
-                player->atr.pos.x = 
-                    room->doors[i].box.pos.x + round(room->doors[i].box.size.w / 2);
-
-                player->atr.pos.y = 
-                    room->scene.size.h - room->doors[i].box.pos.y - 3;
-            case LEFT:
-                player->atr.pos.x =
-                    room->scene.size.w - 3;
-
-                player->atr.pos.y = 
-                    room->doors[i].box.pos.y + round(room->doors[i].box.size.h / 2);
-            case BOTTOM:
-                player->atr.pos.x = 
-                    room->doors[i].box.pos.x + round(room->doors[i].box.size.w / 2);
-
-                player->atr.pos.y =
-                    room->scene.size.h - room->doors[i].box.pos.y + 3;
-            case RIGHT:
-                player->atr.pos.x =
-                    room->doors[i].box.pos.x + 3;
-
-                player->atr.pos.y = 
-                    room->doors[i].box.pos.y + round(room->doors[i].box.size.h / 2);
-        }
-        */
 
         int32_t ret = room->doors[i].out_id;
         return ret;
-
     }
 }
 
